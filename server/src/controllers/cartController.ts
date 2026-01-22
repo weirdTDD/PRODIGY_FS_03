@@ -9,7 +9,7 @@ import { AuthRequest } from '../middleware/auth';
 // @route   GET /api/cart
 // @access  Private
 export const getCart = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     let cart = await Cart.findOne({ user: req.user._id }).populate({
       path: 'items.product',
       select: 'name price images stock isAvailable'
@@ -30,7 +30,7 @@ export const getCart = asyncHandler(
 // @route   POST /api/cart/items
 // @access  Private
 export const addToCart = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const { productId, quantity, size, color } = req.body;
 
     if (!productId || !quantity || !size) {
@@ -100,7 +100,7 @@ export const addToCart = asyncHandler(
 // @route   PUT /api/cart/items/:itemId
 // @access  Private
 export const updateCartItem = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const { quantity } = req.body;
 
     if (!quantity || quantity < 1) {
@@ -113,7 +113,9 @@ export const updateCartItem = asyncHandler(
       throw new NotFoundError('Cart not found');
     }
 
-    const item = cart.items.id(req.params.itemId);
+    const item = cart.items.find(
+      (cartItem) => cartItem._id?.toString() === req.params.itemId
+    );
 
     if (!item) {
       throw new NotFoundError('Item not found in cart');
@@ -151,7 +153,7 @@ export const updateCartItem = asyncHandler(
 // @route   DELETE /api/cart/items/:itemId
 // @access  Private
 export const removeFromCart = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const cart = await Cart.findOne({ user: req.user._id });
 
     if (!cart) {
@@ -180,7 +182,7 @@ export const removeFromCart = asyncHandler(
 // @route   DELETE /api/cart
 // @access  Private
 export const clearCart = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const cart = await Cart.findOne({ user: req.user._id });
 
     if (!cart) {

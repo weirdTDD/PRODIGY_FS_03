@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Health check route
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'Server is running',
@@ -56,7 +56,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 
 // 404 handler
-app.use((req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     error: 'Route not found'

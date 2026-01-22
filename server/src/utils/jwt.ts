@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { Response } from 'express';
 
 export interface TokenPayload {
@@ -7,15 +7,20 @@ export interface TokenPayload {
 }
 
 export const generateToken = (payload: TokenPayload): string => {
-  const secret = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
-  const expiresIn = process.env.JWT_EXPIRE || '7d';
-  
-  return jwt.sign(payload, secret, { expiresIn });
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET is not set')
+
+  const options: SignOptions = {
+    expiresIn: (process.env.JWT_EXPIRES_IN) as SignOptions["expiresIn"]
+  }
+
+  return jwt.sign(payload, secret, options);
 };
 
 export const verifyToken = (token: string): TokenPayload | null => {
   try {
-    const secret = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error('JWT_SECRET is not set')
     return jwt.verify(token, secret) as TokenPayload;
   } catch (error) {
     return null;

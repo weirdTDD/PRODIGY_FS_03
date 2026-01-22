@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IAddress {
@@ -8,6 +8,7 @@ export interface IAddress {
   country: string;
   postalCode?: string;
   isDefault: boolean;
+  _id?: Types.ObjectId;
 }
 
 export interface IUser extends Document {
@@ -17,7 +18,7 @@ export interface IUser extends Document {
   role: 'customer' | 'admin';
   avatar?: string;
   phone?: string;
-  addresses: IAddress[];
+  addresses: Types.DocumentArray<IAddress>;
   isVerified: boolean;
   verificationToken?: string;
   resetPasswordToken?: string;

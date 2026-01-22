@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken, TokenPayload } from '../utils/jwt';
+import { verifyToken } from '../utils/jwt';
 import { UnauthorizedError, ForbiddenError } from '../utils/errors';
 import User from '../models/User';
 
@@ -9,7 +9,7 @@ export interface AuthRequest extends Request {
 
 export const protect = async (
   req: AuthRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
@@ -58,7 +58,7 @@ export const protect = async (
 };
 
 export const authorize = (...roles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: AuthRequest, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       return next(new UnauthorizedError('User not authenticated'));
     }

@@ -14,7 +14,7 @@ import { AuthRequest } from '../middleware/auth';
 // @route   POST /api/auth/register
 // @access  Public
 export const register = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, _next: NextFunction) => {
     const { username, email, password, phone } = req.body;
 
     // Validate required fields
@@ -51,7 +51,7 @@ export const register = asyncHandler(
 // @route   POST /api/auth/login
 // @access  Public
 export const login = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, _next: NextFunction) => {
     const { email, password } = req.body;
 
     // Validate email & password
@@ -81,7 +81,7 @@ export const login = asyncHandler(
 // @route   GET /api/auth/me
 // @access  Private
 export const getMe = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const user = await User.findById(req.user._id);
 
     res.status(200).json({
@@ -95,7 +95,7 @@ export const getMe = asyncHandler(
 // @route   PUT /api/auth/updatedetails
 // @access  Private
 export const updateDetails = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const fieldsToUpdate = {
       username: req.body.username,
       email: req.body.email,
@@ -119,7 +119,7 @@ export const updateDetails = asyncHandler(
 // @route   PUT /api/auth/updatepassword
 // @access  Private
 export const updatePassword = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const user = await User.findById(req.user._id).select('+password');
 
     if (!user) {
@@ -144,7 +144,7 @@ export const updatePassword = asyncHandler(
 // @route   GET /api/auth/logout
 // @access  Private
 export const logout = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (_req: Request, res: Response, _next: NextFunction) => {
     res.cookie('token', 'none', {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true
@@ -161,7 +161,7 @@ export const logout = asyncHandler(
 // @route   POST /api/auth/addresses
 // @access  Private
 export const addAddress = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -188,7 +188,7 @@ export const addAddress = asyncHandler(
 // @route   PUT /api/auth/addresses/:addressId
 // @access  Private
 export const updateAddress = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -220,17 +220,20 @@ export const updateAddress = asyncHandler(
 // @route   DELETE /api/auth/addresses/:addressId
 // @access  Private
 export const deleteAddress = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
       throw new NotFoundError('User not found');
     }
 
-    user.addresses = user.addresses.filter(
-      (addr) => addr._id?.toString() !== req.params.addressId
-    );
+    const address = user.addresses.id(req.params.addressId);
 
+    if (!address) {
+      throw new NotFoundError('Address not found');
+    }
+
+    address.deleteOne();
     await user.save();
 
     res.status(200).json({

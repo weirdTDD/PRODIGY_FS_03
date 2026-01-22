@@ -7,15 +7,20 @@ import { NotFoundError, ValidationError } from '../utils/errors';
 import { AuthRequest } from '../middleware/auth';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia'
+const stripeSecret = process.env.STRIPE_SECRET_KEY;
+if (!stripeSecret) {
+  throw new Error('STRIPE_SECRET_KEY is not set')
+}
+
+const stripe = new Stripe(stripeSecret, {
+  apiVersion: "2025-02-24.acacia",
 });
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
 export const createOrder = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const {
       items,
       shippingAddress,
@@ -33,11 +38,11 @@ export const createOrder = asyncHandler(
     // Verify stock availability for all items
     for (const item of items) {
       const product = await Product.findById(item.product);
-      
+
       if (!product) {
         throw new NotFoundError(`Product ${item.name} not found`);
       }
-      
+
       if (product.stock < item.quantity) {
         throw new ValidationError(
           `Insufficient stock for ${product.name}. Only ${product.stock} available`
@@ -73,7 +78,7 @@ export const createOrder = asyncHandler(
 // @route   GET /api/orders/myorders
 // @access  Private
 export const getMyOrders = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
@@ -100,7 +105,7 @@ export const getMyOrders = asyncHandler(
 // @route   GET /api/orders/:id
 // @access  Private
 export const getOrderById = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const order = await Order.findById(req.params.id).populate(
       'user',
       'username email'
@@ -129,7 +134,7 @@ export const getOrderById = asyncHandler(
 // @route   POST /api/orders/:id/payment-intent
 // @access  Private
 export const createPaymentIntent = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -165,7 +170,7 @@ export const createPaymentIntent = asyncHandler(
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 export const updateOrderToPaid = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -195,7 +200,7 @@ export const updateOrderToPaid = asyncHandler(
 // @route   GET /api/orders
 // @access  Private/Admin
 export const getOrders = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
@@ -233,7 +238,7 @@ export const getOrders = asyncHandler(
 // @route   PUT /api/orders/:id/status
 // @access  Private/Admin
 export const updateOrderStatus = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const { status, trackingNumber } = req.body;
 
     const order = await Order.findById(req.params.id);
@@ -266,7 +271,7 @@ export const updateOrderStatus = asyncHandler(
 // @route   PUT /api/orders/:id/cancel
 // @access  Private
 export const cancelOrder = asyncHandler(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {

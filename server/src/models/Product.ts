@@ -37,11 +37,6 @@ const productSchema = new Schema<IProduct>(
       trim: true,
       maxlength: [200, 'Product name cannot exceed 200 characters']
     },
-    slug: {
-      type: String,
-      unique: true,
-      lowercase: true
-    },
     description: {
       type: String,
       required: [true, 'Please provide a product description'],
