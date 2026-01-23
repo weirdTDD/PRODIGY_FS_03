@@ -9,6 +9,8 @@ import LoadingSpinner from './components/LoadingSpinner';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
+const MenPage = lazy(() => import('./pages/MenPage'));
+const WomenPage = lazy(() => import('./pages/WomenPage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -29,6 +31,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/products/:slug" element={<ProductDetailPage />} />
+              <Route path="/men" element={<MenPage />} />
+              <Route path="/women" element={<WomenPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

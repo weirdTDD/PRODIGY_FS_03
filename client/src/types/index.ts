@@ -180,4 +180,5 @@ export interface ProductFilters {
   sort?: string;
   page?: number;
   limit?: number;
+  available?: boolean;
 }

@@ -7,6 +7,7 @@ import logo from "../Assets/logo.png";
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
   const itemCount = useCartStore((state) => state.itemCount());
+  const clearCart = useCartStore((state) => state.clearCart);
   const location = useLocation();
 
   const navLinks = [
@@ -51,7 +52,10 @@ const Navbar = () => {
                   <User size={22} strokeWidth={1.5} />
                 </Link>
                 <button
-                  onClick={logout}
+                  onClick={() => {
+                    logout();
+                    clearCart();
+                  }}
                   className="text-gray-600 hover:text-black transition-colors"
                 >
                   <LogOut size={22} strokeWidth={1.5} />
