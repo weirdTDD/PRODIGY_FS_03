@@ -1,14 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useCartStore } from "../store/cartStore";
-import { ShoppingBag, User, LogOut } from "lucide-react";
+import { ShoppingBag, User, Menu, X } from "lucide-react";
 import logo from "../Assets/logo.png";
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const itemCount = useCartStore((state) => state.itemCount());
   const clearCart = useCartStore((state) => state.clearCart);
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
     { name: "COLLECTIONS", path: "/products" },
@@ -22,13 +24,21 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Left: Search Icon (Luxury sites prioritize discovery) */}
-          <div className=" md:flex-1">
+          <div className="md:flex-1 flex items-center">
+            <button
+              type="button"
+              className="md:hidden text-gray-700 hover:text-black transition-colors"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              aria-label="Toggle navigation"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
             <img
               src={logo}
               alt="logo"
               width={50}
               height={50}
-              className="text-gray-500 hover:text-black transition-colors"
+              className="hidden md:block text-gray-500 hover:text-black transition-colors"
             />
           </div>
 
@@ -51,15 +61,6 @@ const Navbar = () => {
                 >
                   <User size={22} strokeWidth={1.5} />
                 </Link>
-                <button
-                  onClick={() => {
-                    logout();
-                    clearCart();
-                  }}
-                  className="text-gray-600 hover:text-black transition-colors"
-                >
-                  <LogOut size={22} strokeWidth={1.5} />
-                </button>
               </div>
             ) : (
               <Link
@@ -100,6 +101,51 @@ const Navbar = () => {
             </Link>
           ))}
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden border-t border-gray-100 py-4 space-y-4">
+            <div className="flex flex-col space-y-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-sm tracking-widest font-semibold uppercase
+                    ${location.pathname === link.path ? "text-black" : "text-gray-600 hover:text-black"}`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+            <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
+              {isAuthenticated ? (
+                <Link
+                  to="/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-sm tracking-widest font-semibold uppercase text-gray-600 hover:text-black"
+                >
+                  Profile
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-sm tracking-widest font-semibold uppercase text-gray-600 hover:text-black"
+                >
+                  Login
+                </Link>
+              )}
+              <Link
+                to="/cart"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-sm tracking-widest font-semibold uppercase text-gray-600 hover:text-black"
+              >
+                Cart ({itemCount})
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

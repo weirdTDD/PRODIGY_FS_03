@@ -64,7 +64,7 @@ const Popular = () => {
 
         {/* Product Grid */}
         {error && <p className="text-sm text-red-600 mb-6">{error}</p>}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12">
           {products.map((item) => {
             const image = item.images?.[0];
             const isBusy = busyId === item._id;
