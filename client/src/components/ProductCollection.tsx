@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Product } from "../types";
 import { splitOptions } from "../utils/productOptions";
+import { Heart, ShoppingBag } from "lucide-react";
+import { useCartStore } from "../store/cartStore";
 
 type Props = {
   title: string;
@@ -15,6 +17,40 @@ const ProductCollection = ({ title, description, products }: Props) => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sort, setSort] = useState("price-asc");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleQuickAdd = async (product: Product) => {
+    const sizeOptions = splitOptions(product.size);
+    const colorOptions = splitOptions(product.color);
+
+    const canQuickAdd = sizeOptions.length === 1 && colorOptions.length <= 1;
+
+    if (!canQuickAdd) {
+      navigate(`/products/${product.slug}`);
+      return;
+    }
+
+    setBusyId(product._id);
+    setError(null);
+
+    try {
+      addItem({
+        _id: `${product._id}-${sizeOptions[0]}-${colorOptions[0] || "none"}`,
+        product,
+        quantity: 1,
+        price: product.price,
+        size: sizeOptions[0],
+        color: colorOptions[0],
+      });
+    } catch (err) {
+      setError("We couldn't add that item. Try again.");
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const sizes = useMemo(() => {
     const set = new Set<string>();
@@ -42,8 +78,7 @@ const ProductCollection = ({ title, description, products }: Props) => {
 
     if (sort === "price-asc") {
       list = list.slice().sort((a, b) => a.price - b.price);
-    }
-    if (sort === "price-desc") {
+    } else if (sort === "price-desc") {
       list = list.slice().sort((a, b) => b.price - a.price);
     }
 
@@ -131,9 +166,10 @@ const ProductCollection = ({ title, description, products }: Props) => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-x-8 gap-y-12">
             {filtered.map((product) => {
               const image = product.images?.[0];
+              const isBusy = busyId === product._id;
               return (
                 <Link
                   key={product._id}
@@ -152,11 +188,39 @@ const ProductCollection = ({ title, description, products }: Props) => {
                         No image
                       </div>
                     )}
+
+                    {/* Wishlist Icon */}
+                    <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white">
+                      <Heart
+                        size={18}
+                        strokeWidth={1.5}
+                        className="text-gray-900"
+                      />
+                    </button>
+
+                    {/* Quick Add Overlay */}
+                    <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-black/90 py-4 text-center">
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          handleQuickAdd(product);
+                        }}
+                        disabled={isBusy}
+                        className="text-white text-[11px] tracking-widest flex items-center justify-center w-full uppercase font-medium"
+                      >
+                        <ShoppingBag size={14} className="mr-2" />{" "}
+                        {isBusy ? "Adding..." : "Add to Bag"}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Product Info */}
                   <div className="space-y-1">
-                    <p className="text-[13px] tracking-wide text-gray-800 uppercase font-medium group-hover:text-black transition-colors">
+                    <p className="text-[13px] tracking-wide text-gray-800 uppercase font-medium group-hover:text-black transition-colors block">
                       {product.name}
                     </p>
+
                     <div className="flex items-center space-x-3 pt-1">
                       <span className="text-sm font-semibold text-black">
                         GH₵ {product.price.toFixed(2)}
