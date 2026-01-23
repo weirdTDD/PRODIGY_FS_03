@@ -37,16 +37,16 @@ const HomePage = () => {
         <div className="container-custom py-20">
           <div className="flex gap-8 items-center justify-between">
             <div className="max-w-3xl">
-              <h1 className="text-5xl font-bold mb-6">
+              <h1 className="text-3xl md:text-5xl font-bold mb-6">
                 Premium Men's Thrift Clothing in Accra
               </h1>
-              <p className="text-xl mb-8">
+              <p className="text-base md:text-xl mb-8">
                 Discover unique, high-quality thrift clothing at unbeatable
                 prices. Sustainable fashion that doesn't compromise on style.
               </p>
               <Link
                 to="/products"
-                className="btn bg-white text-nowrap text-yellow-600 hover:bg-gray-100 flex items-center justify-center w-1/2 md:w-1/3"
+                className="btn bg-white text-sm md:text-base text-nowrap text-yellow-600 hover:bg-gray-100 flex items-center justify-center w-5/12 md:w-1/3"
               >
                 Our Collections
                 <ArrowRight className="ml-2 " />

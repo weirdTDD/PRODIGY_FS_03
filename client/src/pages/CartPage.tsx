@@ -20,16 +20,12 @@ const CartPage = () => {
   const [isClearing, setIsClearing] = useState(false);
 
   const subtotal = useMemo(
-    () =>
-      items.reduce((total, item) => total + item.price * item.quantity, 0),
-    [items]
+    () => items.reduce((total, item) => total + item.price * item.quantity, 0),
+    [items],
   );
   const total = cartTotal || subtotal;
 
-  const handleUpdateQuantity = async (
-    itemId: string,
-    nextQuantity: number
-  ) => {
+  const handleUpdateQuantity = async (itemId: string, nextQuantity: number) => {
     if (!itemId) return;
     setBusyItemId(itemId);
     setError(null);
@@ -137,7 +133,8 @@ const CartPage = () => {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="text-sm uppercase tracking-widest text-gray-500">
-                            {product?.category && typeof product.category !== "string"
+                            {product?.category &&
+                            typeof product.category !== "string"
                               ? product.category.name
                               : "Item"}
                           </p>
@@ -165,7 +162,7 @@ const CartPage = () => {
                             onClick={() =>
                               handleUpdateQuantity(
                                 item._id || "",
-                                Math.max(1, item.quantity - 1)
+                                Math.max(1, item.quantity - 1),
                               )
                             }
                             className="px-3 py-1 text-sm text-gray-600 hover:text-black"
@@ -178,7 +175,7 @@ const CartPage = () => {
                             onClick={() =>
                               handleUpdateQuantity(
                                 item._id || "",
-                                Math.min(maxQuantity, item.quantity + 1)
+                                Math.min(maxQuantity, item.quantity + 1),
                               )
                             }
                             className="px-3 py-1 text-sm text-gray-600 hover:text-black"
@@ -212,7 +209,7 @@ const CartPage = () => {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Order Summary
           </h2>
-          <div className="space-y-3 text-sm text-gray-600">
+          <div className="space-y-3 text-sm text-gray-600 mb-10">
             <div className="flex justify-between">
               <span>Subtotal</span>
               <span className="text-gray-900">{formatPrice(subtotal)}</span>
@@ -233,7 +230,7 @@ const CartPage = () => {
 
           <Link
             to="/checkout"
-            className={`btn btn-primary w-full mt-6 text-center ${
+            className={`btn btn-primary w-full text-center ${
               items.length === 0 ? "pointer-events-none opacity-60" : ""
             }`}
           >

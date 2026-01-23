@@ -33,7 +33,7 @@ const Features = () => {
               className="flex flex-col items-center text-center group"
             >
               {/* Icon Wrapper - Minimalist & Airy */}
-              <div className="mb-6 p-4 text-black group-hover:scale-110 transition-transform duration-500 ease-out">
+              <div className="mb-6 p-4 bg-amber-400/60 rounded-full text-black group-hover:scale-110 transition-transform duration-500 ease-out">
                 {feature.icon}
               </div>
 
@@ -41,7 +41,7 @@ const Features = () => {
               <h3 className="text-xs tracking-[0.3em] uppercase font-bold mb-3 text-black">
                 {feature.title}
               </h3>
-              <p className="text-gray-500 font-light leading-relaxed max-w-xs text-sm">
+              <p className="text-gray-600 font-light leading-relaxed max-w-xs text-sm">
                 {feature.description}
               </p>
             </div>
