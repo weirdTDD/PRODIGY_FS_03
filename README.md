@@ -5,21 +5,21 @@ A full-stack e-commerce platform for a local thrift market in Accra, Ghana, spec
 ## 🚀 Features
 
 ### Customer Features
-- **Product Browsing**: Browse and search through curated men's thrift clothing
-- **Advanced Filtering**: Filter by category, size, condition, price range
-- **Product Details**: Detailed product information including measurements, condition, and reviews
-- **Shopping Cart**: Add items to cart, update quantities, and manage orders
-- **User Authentication**: Secure JWT-based authentication
-- **User Profile**: Manage personal information, addresses, and order history
-- **Order Management**: Track orders from placement to delivery
-- **Payment Integration**: Stripe integration for secure payments
-- **Reviews & Ratings**: Leave reviews and rate products
+- **Collections Browsing**: All products, Men, and Women collections with legacy data
+- **Search + Filters**: Search by name, filter by size and price range
+- **Sorting**: Price low-to-high and high-to-low
+- **Product Details**: Legacy product detail pages with images and size selection
+- **Local Cart**: Add items, update quantities, remove items, clear cart (stored locally)
+- **User Authentication UI**: Login and register pages wired to auth API
+- **User Profile**: Profile page with logout action
+- **Mobile Navigation**: Hamburger menu on small screens
+- **About Page**: Brand story and founders
 
 ### Admin Features
-- **Product Management**: Create, update, and delete products
-- **Order Management**: View and update order status
-- **Inventory Tracking**: Real-time stock management
-- **Category Management**: Organize products by categories
+- **Product Management**: Create, update, and delete products (API-ready)
+- **Order Management**: View and update order status (API-ready)
+- **Inventory Tracking**: Real-time stock management (API-ready)
+- **Category Management**: Organize products by categories (API-ready)
 
 ## 🛠️ Tech Stack
 
@@ -142,6 +142,27 @@ thrift-market-accra/
    - Frontend: http://localhost:5173
    - Backend: http://localhost:5000
    - API Health: http://localhost:5000/health
+
+## 🧩 Frontend Pages
+
+- `/` Home
+- `/products` All Collections (powered by `client/src/Assets/all_products.js`)
+- `/products/:slug` Product detail (legacy data)
+- `/men` Men collection (keyword-based)
+- `/women` Women collection (keyword-based)
+- `/cart` Cart (local storage)
+- `/login` Login
+- `/register` Register
+- `/profile` Profile + logout
+- `/about` About the brand
+
+## 🧪 Legacy Data Mode (Current)
+
+The storefront currently runs on local legacy data so the UI works without a seeded API:
+- All Collections uses `client/src/Assets/all_products.js`.
+- Men/Women collections use legacy keyword matching on product names.
+- Product details and cart are local-only (Zustand + localStorage).
+- Auth UI is wired to the API for when the backend is ready.
 
 ## 📚 API Documentation
 

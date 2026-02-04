@@ -5,7 +5,7 @@ const Offers = () => {
   return (
     <div className="py-16 grid grid-cols-2 items-center justify-between bg-gradient-to-t from-white/95 to-yellow-700 w-full">
       <div className="space-y-4 mx-[5%] text-white mb-16">
-        <p className="text-sm tracking-[0.5em] uppercase mb-6 font-medium text-gray-300">
+        <p className="text-xs tracking-[0.2em] uppercase mb-6 font-medium text-gray-300 text-nowrap">
           ONLY ON BEST SELLERS PRODUCTS
         </p>
         <h1 className="text-4xl md:text-6xl font-serif mb-8 leading-tight">
@@ -18,13 +18,13 @@ const Offers = () => {
           View Offers
         </button>
       </div>
-      <div className="flex items-center justify-around">
+      <div className="flex items-center  justify-around">
         <img
           src={exclusive_image}
           alt="exclusive offer"
-          width={200}
-          height={200}
-          className="object-cover "
+          width={150}
+          height={150}
+          className=" object-center"
         />
       </div>
     </div>

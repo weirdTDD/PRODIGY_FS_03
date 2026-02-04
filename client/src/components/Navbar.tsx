@@ -27,7 +27,7 @@ const Navbar = () => {
           <div className="md:flex-1 flex items-center">
             <button
               type="button"
-              className="md:hidden text-gray-700 hover:text-black transition-colors"
+              className="block md:hidden text-gray-700 hover:text-black transition-colors"
               onClick={() => setIsMenuOpen((open) => !open)}
               aria-label="Toggle navigation"
             >
@@ -43,10 +43,11 @@ const Navbar = () => {
           </div>
 
           {/* Center: Logo (Serif font, centered for prestige) */}
-          <div className="flex-1 text-center">
+          <div className="flex-1 text-center ml-2">
             <Link to="/" className="inline-block">
-              <h1 className="text-xl md:text-3xl font-serif tracking-tighter text-black uppercase">
-                Thrift Market <span className="font-light italic">Accra</span>
+              <h1 className="text-lg md:text-2xl font-serif tracking-tighter text-black uppercase text-nowrap">
+                Thrift Market{" "}
+                <span className="font-light italic sm:">Accra</span>
               </h1>
             </Link>
           </div>
@@ -74,7 +75,7 @@ const Navbar = () => {
             {/* Cart with minimal badge */}
             <Link to="/cart" className="relative group">
               <ShoppingBag
-                size={32}
+                size={24}
                 strokeWidth={1.5}
                 className="text-gray-800 group-hover:text-black"
               />
