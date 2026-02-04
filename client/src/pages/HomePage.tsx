@@ -38,7 +38,7 @@ const HomePage = () => {
           <div className="flex gap-8 items-center justify-between">
             <div className="max-w-3xl">
               <h1 className="text-3xl md:text-5xl font-bold mb-6">
-                Premium Men's Thrift Clothing in Accra
+                Premium Unisex Thrift Clothing in Accra
               </h1>
               <p className="text-base md:text-xl mb-8">
                 Discover unique, high-quality thrift clothing at unbeatable
